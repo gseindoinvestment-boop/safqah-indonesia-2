@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>صفقة إندونيسيا</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+:root {
+  --red: #C0392B;
+  --red2: #922B21;
+  --black: #0D0D0D;
+  --dark: #1C1C1E;
+  --white: #FFFFFF;
+  --gray: #8E8E93;
+  --light: #F2F2F7;
+  --green: #34C759;
+  --yellow: #FF9F0A;
+  --f: 'Cairo', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+body { font-family:var(--f); background:var(--light); color:var(--black); overflow-x:hidden; }
+
+/* ── PAGES via anchor ── */
+.page {
+  display: none;
+  min-height: 100vh;
+}
+
+/* Show page when its anchor is targeted */
+#home:target ~ * .page,
+.page { display: none; }
+
+/* Default: show home */
+#pg-home { display: block; }
+
+/* Each page shown when anchor active */
+#home:target ~ #pg-home,
+#sector:target ~ #pg-sector,
+#company:target ~ #pg-company,
+#dash:target ~ #pg-dash,
+#messages:target ~ #pg-messages,
+#chat:target ~ #pg-chat,
+#login:target ~ #pg-login,
+#register:target ~ #pg-register { display: block; }
+
+/* Hide home when another anchor is targeted */
+#sector:target ~ #pg-home,
+#company:target ~ #pg-home,
+#dash:target ~ #pg-home,
+#messages:target ~ #pg-home,
+#chat:target ~ #pg-home,
+#login:target ~ #pg-home,
+#register:target ~ #pg-home { display: none; }
+
+/* ── BOTTOM NAV ── */
+.bnav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 999;
+  background: var(--dark);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  padding-bottom: env(safe-area-inset-bottom, 8px);
+}
+.bnav a {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  padding: 10px 4px 6px; gap: 3px;
+  color: var(--gray); font-size: 10px;
+  text-decoration: none; font-family: var(--f);
+  transition: color .15s;
+}
+.bnav a:active { color: var(--red); }
+.bnav svg { width: 22px; height: 22px; }
+.bnav-badge {
+  position: absolute; top: 6px; right: calc(50% - 18px);
+  background: var(--red); color: #fff; border-radius: 10px;
+  font-size: 9px; font-weight: 700; padding: 1px 5px;
+}
+
+/* ── TOP BAR ── */
+.topbar {
+  background: var(--dark);
+  padding: 52px 16px 14px;
+  border-bottom: 2px solid var(--red);
+}
+.topbar-row { display: flex; align-items: center; justify-content: space-between; }
+.logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+.logo-sq {
+  width: 34px; height: 34px; background: var(--red); border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; font-weight: 900; color: #fff;
+}
+.logo-text { font-size: 17px; font-weight: 900; color: #fff; }
+.logo-text span { color: var(--red); }
+.topbar-sub { font-size: 11px; color: var(--gray); margin-top: 4px; }
+.back-link {
+  background: rgba(255,255,255,0.1); border: none; color: #fff;
+  font-size: 20px; padding: 6px 12px; border-radius: 8px;
+  text-decoration: none; display: inline-block;
+}
+
+/* ── HERO ── */
+.hero { background: var(--dark); padding: 20px 16px 28px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(192,57,43,0.15); border: 1px solid rgba(192,57,43,0.3);
+  border-radius: 20px; padding: 4px 12px;
+  font-size: 11px; color: var(--red); font-weight: 700; margin-bottom: 14px;
+}
+.hero-title { font-size: 26px; font-weight: 900; color: #fff; line-height: 1.2; margin-bottom: 10px; }
+.hero-title b { color: var(--red); }
+.hero-desc { font-size: 13px; color: var(--gray); line-height: 1.7; margin-bottom: 20px; }
+.hero-btns { display: flex; gap: 10px; }
+.btn-primary {
+  flex: 1; padding: 13px 10px; background: var(--red);
+  color: #fff; border: none; border-radius: 10px;
+  font-family: var(--f); font-size: 14px; font-weight: 700;
+  cursor: pointer; text-align: center; text-decoration: none;
+  display: block;
+}
+.btn-ghost {
+  padding: 13px 16px; background: rgba(255,255,255,0.07);
+  color: #fff; border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 10px; font-family: var(--f); font-size: 13px;
+  font-weight: 600; cursor: pointer; white-space: nowrap;
+  text-decoration: none; display: block;
+}
+
+/* Stats */
+.stats-bar {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  background: var(--dark); padding: 16px 0 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.stat { text-align: center; }
+.stat-n { font-size: 20px; font-weight: 900; color: var(--red); line-height: 1; }
+.stat-l { font-size: 10px; color: var(--gray); margin-top: 3px; }
+
+/* Search */
+.search-wrap {
+  margin: 16px; background: #fff; border-radius: 12px;
+  display: flex; align-items: center; border: 1.5px solid #E5E5EA; overflow: hidden;
+}
+.search-wrap input {
+  flex: 1; padding: 13px 14px; border: none; outline: none;
+  font-family: var(--f); font-size: 14px; color: var(--black); background: transparent;
+}
+.search-wrap input::placeholder { color: #C7C7CC; }
+.search-btn { padding: 13px 16px; background: var(--red); border: none; cursor: pointer; color: #fff; font-size: 16px; }
+
+/* Section header */
+.sec-hd {
+  padding: 20px 16px 12px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.sec-hd h2 { font-size: 17px; font-weight: 800; color: var(--black); }
+.sec-hd a { font-size: 13px; color: var(--red); text-decoration: none; font-weight: 600; }
+
+/* Sectors scroll */
+.sectors-scroll {
+  display: flex; gap: 10px; padding: 0 16px 16px;
+  overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+}
+.sectors-scroll::-webkit-scrollbar { display: none; }
+.sector-chip {
+  flex-shrink: 0; background: #fff; border-radius: 14px;
+  border: 1.5px solid #E5E5EA; padding: 14px 16px;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 8px; cursor: pointer; width: 100px; text-decoration: none;
+}
+.sector-chip:active { border-color: var(--red); background: rgba(192,57,43,0.04); }
+.sector-chip .ico { font-size: 26px; }
+.sector-chip .name { font-size: 11px; font-weight: 700; color: var(--black); text-align: center; line-height: 1.3; }
+.sector-chip .cnt { font-size: 10px; color: var(--gray); }
+
+/* Company cards */
+.cards-list { padding: 0 16px 100px; display: flex; flex-direction: column; gap: 12px; }
+.ccard { background: #fff; border-radius: 16px; border: 1px solid #E5E5EA; overflow: hidden; text-decoration: none; display: block; }
+.ccard-top {
+  background: linear-gradient(120deg, var(--red2), var(--red));
+  padding: 16px; display: flex; align-items: center; gap: 12px;
+}
+.ccard-logo {
+  width: 46px; height: 46px; border-radius: 10px;
+  background: rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.ccard-hinfo { flex: 1; }
+.ccard-en { font-size: 10px; color: rgba(255,255,255,0.6); margin-bottom: 2px; }
+.ccard-ar { font-size: 14px; font-weight: 800; color: #fff; }
+.status-dot-row {
+  display: flex; align-items: center; gap: 4px;
+  background: rgba(0,0,0,0.2); border-radius: 20px;
+  padding: 3px 8px; font-size: 10px; color: #fff;
+}
+.dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.dot.g { background: var(--green); }
+.dot.y { background: var(--yellow); }
+.ccard-body { padding: 14px; }
+.ccard-desc { font-size: 12.5px; color: #555; line-height: 1.6; margin-bottom: 12px; }
+.tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.tag { background: var(--light); border-radius: 6px; padding: 4px 9px; font-size: 11px; color: #555; }
+.tag.red { background: rgba(192,57,43,0.08); color: var(--red); font-weight: 700; }
+.ccard-actions { display: flex; gap: 8px; padding-top: 12px; border-top: 1px solid #F2F2F7; }
+.ccard-btn {
+  flex: 1; padding: 10px 6px; border-radius: 8px;
+  font-family: var(--f); font-size: 12px; font-weight: 700;
+  cursor: pointer; text-align: center; border: none; text-decoration: none;
+  display: block;
+}
+.ccard-btn.main { background: var(--red); color: #fff; }
+.ccard-btn.out { background: transparent; color: var(--black); border: 1.5px solid #E5E5EA; }
+
+/* How it works */
+.how-card {
+  margin: 0 16px 12px; background: var(--dark); border-radius: 16px;
+  padding: 18px 16px; display: flex; align-items: flex-start; gap: 14px;
+}
+.step-num {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(192,57,43,0.2); border: 2px solid var(--red);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 900; color: var(--red); flex-shrink: 0;
+}
+.step-text h3 { font-size: 14px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+.step-text p { font-size: 12px; color: var(--gray); line-height: 1.6; }
+
+/* Services */
+.svc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 16px 20px; }
+.svc-card { background: #fff; border-radius: 14px; border: 1px solid #E5E5EA; padding: 16px 14px; }
+.svc-num { font-size: 10px; color: var(--red); font-weight: 800; letter-spacing: 1px; margin-bottom: 8px; }
+.svc-ico { font-size: 24px; margin-bottom: 8px; }
+.svc-name { font-size: 12.5px; font-weight: 800; color: var(--black); line-height: 1.4; margin-bottom: 5px; }
+.svc-desc { font-size: 11px; color: var(--gray); line-height: 1.5; }
+
+/* Filter bar */
+.filter-bar {
+  background: #fff; padding: 12px 16px; border-bottom: 1px solid #E5E5EA;
+  display: flex; gap: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+}
+.filter-bar::-webkit-scrollbar { display: none; }
+.fchip {
+  flex-shrink: 0; padding: 7px 14px; border-radius: 20px;
+  font-family: var(--f); font-size: 12px; font-weight: 600;
+  border: 1.5px solid #E5E5EA; color: #555; background: #fff; white-space: nowrap;
+  text-decoration: none; display: block;
+}
+.fchip.active { background: var(--red); color: #fff; border-color: var(--red); }
+
+/* Profile */
+.profile-hero {
+  background: linear-gradient(135deg, var(--black), var(--dark));
+  padding: 60px 16px 24px; text-align: center; border-bottom: 2px solid var(--red);
+}
+.profile-logo-big {
+  width: 80px; height: 80px; border-radius: 20px;
+  background: rgba(192,57,43,0.2); border: 2px solid rgba(192,57,43,0.4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px; margin: 0 auto 14px;
+}
+.profile-name { font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 4px; }
+.profile-en { font-size: 12px; color: var(--gray); margin-bottom: 14px; }
+.profile-chips { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; margin-bottom: 18px; }
+.pchip { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); color: #aaa; border-radius: 6px; padding: 4px 10px; font-size: 11px; }
+.profile-actions { display: flex; flex-direction: column; gap: 9px; }
+.pact-btn {
+  padding: 13px; border-radius: 10px; font-family: var(--f); font-size: 14px;
+  font-weight: 700; cursor: pointer; text-align: center; text-decoration: none; display: block;
+}
+.pact-btn.main { background: var(--red); color: #fff; }
+.pact-btn.out { background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.15); }
+
+.profile-tabs {
+  display: flex; background: #fff; border-bottom: 1px solid #E5E5EA;
+  overflow-x: auto; scrollbar-width: none;
+}
+.profile-tabs::-webkit-scrollbar { display: none; }
+.ptab { flex-shrink: 0; padding: 13px 18px; font-size: 13px; font-weight: 700; color: var(--gray); white-space: nowrap; }
+
+.pblock { background: #fff; margin: 12px 16px; border-radius: 14px; border: 1px solid #E5E5EA; padding: 18px; }
+.pblock-title { font-size: 14px; font-weight: 800; color: var(--black); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.pblock-title::before { content:''; width: 3px; height: 18px; background: var(--red); border-radius: 2px; flex-shrink: 0; }
+.prow { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #F2F2F7; font-size: 13px; color: #333; }
+.prow:last-child { border-bottom: none; }
+.prow-ico { font-size: 18px; color: var(--red); flex-shrink: 0; }
+.prod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.prod-item { background: var(--light); border-radius: 10px; padding: 12px; display: flex; align-items: center; gap: 8px; }
+.prod-ico { font-size: 22px; }
+.prod-name { font-size: 12px; font-weight: 700; color: var(--black); }
+.prod-moq { font-size: 10px; color: var(--gray); margin-top: 2px; }
+.cert-item { display: flex; align-items: center; gap: 10px; background: rgba(52,199,89,0.08); border: 1px solid rgba(52,199,89,0.2); border-radius: 10px; padding: 12px; margin-bottom: 8px; }
+.cert-ico { font-size: 22px; }
+.cert-n { font-size: 13px; font-weight: 700; color: var(--black); }
+.cert-exp { font-size: 11px; color: var(--gray); margin-top: 2px; }
+
+/* Dashboard */
+.dash-greeting { background: var(--dark); padding: 52px 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.dash-name { font-size: 22px; font-weight: 900; color: #fff; }
+.dash-sub { font-size: 13px; color: var(--gray); margin-top: 4px; }
+.dash-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 16px; }
+.dstat { background: #fff; border-radius: 14px; border: 1px solid #E5E5EA; padding: 16px; }
+.dstat-n { font-size: 28px; font-weight: 900; color: var(--black); line-height: 1; }
+.dstat-n.red { color: var(--red); }
+.dstat-l { font-size: 12px; color: var(--gray); margin-top: 4px; }
+.dstat-c { font-size: 11px; color: var(--green); margin-top: 3px; font-weight: 600; }
+.list-card { background: #fff; margin: 0 16px 12px; border-radius: 14px; border: 1px solid #E5E5EA; overflow: hidden; }
+.list-header { padding: 14px 16px; border-bottom: 1px solid #F2F2F7; display: flex; align-items: center; justify-content: space-between; }
+.list-title { font-size: 14px; font-weight: 800; color: var(--black); }
+.list-more { font-size: 12px; color: var(--red); font-weight: 600; text-decoration: none; }
+.list-item { padding: 14px 16px; border-bottom: 1px solid #F2F2F7; display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.list-item:last-child { border-bottom: none; }
+.li-ico { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.li-info { flex: 1; min-width: 0; }
+.li-name { font-size: 13.5px; font-weight: 700; color: var(--black); }
+.li-sub { font-size: 11.5px; color: var(--gray); margin-top: 2px; }
+.pill { padding: 4px 9px; border-radius: 20px; font-size: 10px; font-weight: 700; }
+.pill.g { background: rgba(52,199,89,0.12); color: var(--green); }
+.pill.y { background: rgba(255,159,10,0.12); color: var(--yellow); }
+.pill.r { background: rgba(192,57,43,0.1); color: var(--red); }
+
+/* Messages */
+.msg-list { padding: 0 0 100px; }
+.msg-item { padding: 14px 16px; background: #fff; border-bottom: 1px solid #F2F2F7; display: flex; gap: 12px; align-items: center; text-decoration: none; }
+.msg-avatar { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.msg-info { flex: 1; min-width: 0; }
+.msg-name { font-size: 14px; font-weight: 800; color: var(--black); }
+.msg-preview { font-size: 12px; color: var(--gray); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.msg-meta { text-align: left; flex-shrink: 0; }
+.msg-time { font-size: 11px; color: var(--gray); }
+.msg-badge { background: var(--red); color: #fff; border-radius: 10px; font-size: 10px; font-weight: 800; padding: 2px 6px; margin-top: 4px; display: inline-block; }
+
+/* Chat */
+.chat-topbar { background: var(--dark); padding: 52px 16px 14px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 12px; }
+.chat-av { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.chat-cname { font-size: 14px; font-weight: 800; color: #fff; }
+.chat-online { font-size: 11px; color: var(--green); margin-top: 2px; }
+.chat-area { padding: 16px; display: flex; flex-direction: column; gap: 14px; background: #F2F2F7; padding-bottom: 140px; }
+.bubble-in, .bubble-out { max-width: 80%; }
+.bubble-in { align-self: flex-start; }
+.bubble-out { align-self: flex-end; }
+.bubble-body { border-radius: 16px; padding: 12px 14px; font-size: 13.5px; line-height: 1.6; }
+.bubble-in .bubble-body { background: #fff; color: var(--black); border-bottom-right-radius: 4px; }
+.bubble-out .bubble-body { background: var(--red); color: #fff; border-bottom-left-radius: 4px; }
+.bubble-time { font-size: 10px; color: var(--gray); margin-top: 4px; padding: 0 4px; }
+.bubble-out .bubble-time { text-align: left; }
+.quick-replies { display: flex; gap: 8px; padding: 10px 16px; overflow-x: auto; scrollbar-width: none; background: var(--light); border-bottom: 1px solid #E5E5EA; }
+.quick-replies::-webkit-scrollbar { display: none; }
+.qr { flex-shrink: 0; padding: 7px 13px; border-radius: 20px; font-family: var(--f); font-size: 12px; font-weight: 600; background: #fff; border: 1.5px solid #E5E5EA; color: #555; white-space: nowrap; text-decoration: none; display: block; }
+.qr.red { border-color: rgba(192,57,43,0.3); color: var(--red); background: rgba(192,57,43,0.05); }
+.attach-bubble { background: var(--light); border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+.att-ico { font-size: 22px; }
+.att-name { font-size: 12px; font-weight: 700; color: var(--black); }
+.att-size { font-size: 10px; color: var(--gray); }
+.att-dl { font-size: 18px; color: var(--red); margin-right: auto; }
+.chat-input-bar { position: fixed; bottom: 60px; left: 0; right: 0; background: #fff; padding: 10px 16px; border-top: 1px solid #E5E5EA; display: flex; gap: 10px; align-items: center; }
+.chat-input { flex: 1; background: var(--light); border-radius: 22px; padding: 11px 16px; border: none; outline: none; font-family: var(--f); font-size: 14px; color: var(--black); }
+.chat-send { width: 44px; height: 44px; background: var(--red); border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff; flex-shrink: 0; text-decoration: none; }
+
+/* Auth */
+.auth-wrap { background: var(--dark); min-height: 100vh; padding: 60px 24px 100px; }
+.auth-logo { text-align: center; margin-bottom: 32px; }
+.auth-logo .logo-sq { width: 56px; height: 56px; font-size: 26px; margin: 0 auto 12px; border-radius: 14px; }
+.auth-logo h1 { font-size: 22px; font-weight: 900; color: #fff; }
+.auth-logo p { font-size: 13px; color: var(--gray); margin-top: 6px; }
+.auth-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px; }
+.field { margin-bottom: 16px; }
+.field label { display: block; font-size: 12px; color: var(--gray); font-weight: 700; margin-bottom: 7px; }
+.field input, .field select {
+  width: 100%; padding: 13px 14px;
+  background: rgba(255,255,255,0.07); border: 1.5px solid rgba(255,255,255,0.1);
+  border-radius: 10px; color: #fff; font-family: var(--f); font-size: 14px; outline: none;
+}
+.field input::placeholder { color: #555; }
+.field select { color: #aaa; }
+.field option { background: var(--dark); }
+.social-row { display: flex; gap: 10px; margin-bottom: 20px; }
+.social-btn { flex: 1; padding: 12px; border-radius: 10px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); color: #ccc; font-family: var(--f); font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.divider { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.divider span { font-size: 12px; color: #444; white-space: nowrap; }
+.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.07); }
+.auth-btn { width: 100%; padding: 14px; background: var(--red); color: #fff; border: none; border-radius: 12px; font-family: var(--f); font-size: 15px; font-weight: 800; cursor: pointer; margin-top: 8px; text-decoration: none; display: block; text-align: center; }
+.auth-link { text-align: center; margin-top: 16px; font-size: 13px; color: var(--gray); }
+.auth-link a { color: var(--red); text-decoration: none; font-weight: 700; }
+.type-toggle { display: flex; background: rgba(255,255,255,0.07); border-radius: 12px; padding: 4px; margin-bottom: 20px; }
+.tt-btn { flex: 1; padding: 11px; border-radius: 9px; font-family: var(--f); font-size: 13px; font-weight: 700; cursor: pointer; border: none; background: transparent; color: var(--gray); }
+.tt-btn.active { background: var(--red); color: #fff; }
+
+/* RFQ Sheet */
+.rfq-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7); z-index: 500;
+  align-items: flex-end; justify-content: center;
+}
+.rfq-overlay:target { display: flex; }
+.rfq-sheet { background: #fff; width: 100%; max-height: 92vh; border-radius: 20px 20px 0 0; overflow-y: auto; padding-bottom: 20px; }
+.rfq-handle { width: 40px; height: 4px; background: #E5E5EA; border-radius: 2px; margin: 12px auto 0; }
+.rfq-hd { padding: 16px 20px; border-bottom: 1px solid #F2F2F7; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: #fff; }
+.rfq-title { font-size: 16px; font-weight: 800; color: var(--black); }
+.rfq-close { width: 30px; height: 30px; background: var(--light); border-radius: 50%; border: none; font-size: 14px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: #666; }
+.rfq-body { padding: 20px; }
+.rfq-field { margin-bottom: 16px; }
+.rfq-label { display: block; font-size: 13px; font-weight: 700; color: var(--black); margin-bottom: 8px; }
+.rfq-input { width: 100%; padding: 13px 14px; border: 1.5px solid #E5E5EA; border-radius: 10px; font-family: var(--f); font-size: 14px; outline: none; color: var(--black); }
+.rfq-input:focus { border-color: var(--red); }
+.rfq-row { display: flex; gap: 10px; }
+.rfq-row .rfq-field { flex: 1; }
+.freq-opts { display: flex; gap: 8px; flex-wrap: wrap; }
+.freq-opt { padding: 9px 16px; border-radius: 20px; border: 1.5px solid #E5E5EA; font-family: var(--f); font-size: 13px; font-weight: 600; color: #555; background: #fff; }
+.rfq-summary { background: rgba(192,57,43,0.05); border: 1px solid rgba(192,57,43,0.15); border-radius: 10px; padding: 14px; margin: 16px 0; }
+.rfq-sum-title { font-size: 12px; font-weight: 800; color: var(--red); margin-bottom: 8px; }
+.rfq-sum-row { display: flex; justify-content: space-between; font-size: 12.5px; color: #666; padding: 4px 0; }
+.rfq-sum-row strong { color: var(--black); }
+.rfq-submit { width: 100%; padding: 14px; background: var(--red); color: #fff; border: none; border-radius: 12px; font-family: var(--f); font-size: 15px; font-weight: 800; cursor: pointer; }
+
+/* Toast */
+.toast { display: none; position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--green); color: #fff; padding: 12px 24px; border-radius: 24px; font-size: 14px; font-weight: 700; z-index: 600; white-space: nowrap; }
+
+@keyframes bounce {
+  from { transform: translateY(0); opacity: .5; }
+  to   { transform: translateY(-6px); opacity: 1; }
+}
+</style>
+</head>
+<body>
+
+<!-- Anchor targets -->
+<span id="home"></span>
+<span id="sector"></span>
+<span id="company"></span>
+<span id="dash"></span>
+<span id="messages"></span>
+<span id="chat"></span>
+<span id="login"></span>
+<span id="register"></span>
+
+<!-- ══ HOME ══ -->
+<div id="pg-home" class="page">
+  <div class="topbar">
+    <div class="topbar-row">
+      <a href="#home" class="logo">
+        <div class="logo-sq">ص</div>
+        <div class="logo-text"><span>صفقة</span> إندونيسيا</div>
+      </a>
+      <div style="display:flex;gap:8px">
+        <a href="#login" style="padding:8px 14px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#fff;font-family:var(--f);font-size:12px;font-weight:600;text-decoration:none">دخول</a>
+        <a href="#register" style="padding:8px 14px;background:var(--red);border-radius:8px;color:#fff;font-family:var(--f);font-size:12px;font-weight:700;text-decoration:none">تسجيل</a>
+      </div>
+    </div>
+    <div class="topbar-sub">الجسر التجاري بين إندونيسيا والعالم العربي</div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-tag">🌙 منصة B2B متخصصة</div>
+    <h1 class="hero-title">ربط <b>إندونيسيا</b><br>بالعالم العربي</h1>
+    <p class="hero-desc">اكتشف آلاف الشركات والمصانع الإندونيسية المعتمدة وتواصل معها مباشرة.</p>
+    <div class="hero-btns">
+      <a href="#sector" class="btn-primary">تصفح الشركات</a>
+      <a href="#company" class="btn-ghost">مثال ملف شركة</a>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-n">1200+</div><div class="stat-l">شركة</div></div>
+    <div class="stat"><div class="stat-n">8</div><div class="stat-l">قطاعات</div></div>
+    <div class="stat"><div class="stat-n">340+</div><div class="stat-l">مستورد</div></div>
+    <div class="stat"><div class="stat-n">17</div><div class="stat-l">محافظة</div></div>
+  </div>
+
+  <div class="search-wrap">
+    <input type="text" placeholder="ابحث عن منتج أو شركة...">
+    <button class="search-btn">🔍</button>
+  </div>
+
+  <div class="sec-hd"><h2>القطاعات</h2><a href="#sector">عرض الكل ←</a></div>
+  <div class="sectors-scroll">
+    <a href="#sector" class="sector-chip"><div class="ico">⚡</div><div class="name">الفحم والطاقة</div><div class="cnt">147</div></a>
+    <a href="#sector" class="sector-chip"><div class="ico">🪵</div><div class="name">منتجات خشبية</div><div class="cnt">213</div></a>
+    <a href="#sector" class="sector-chip"><div class="ico">🌾</div><div class="name">منتجات زراعية</div><div class="cnt">189</div></a>
+    <a href="#sector" class="sector-chip"><div class="ico">🍜</div><div class="name">مواد غذائية</div><div class="cnt">276</div></a>
+    <a href="#sector" class="sector-chip"><div class="ico">🐟</div><div class="name">ثروة سمكية</div><div class="cnt">134</div></a>
+    <a href="#sector" class="sector-chip"><div class="ico">🧪</div><div class="name">كيميائية</div><div class="cnt">98</div></a>
+    <a href="#sector" class="sector-chip"><div class="ico">👶</div><div class="name">مستلزمات أطفال</div><div class="cnt">84</div></a>
+    <a href="#sector" class="sector-chip"><div class="ico">⚙️</div><div class="name">صناعية</div><div class="cnt">162</div></a>
+  </div>
+
+  <div class="sec-hd"><h2>شركات مميزة</h2><a href="#sector">الكل ←</a></div>
+  <div class="cards-list">
+    <a href="#company" class="ccard">
+      <div class="ccard-top">
+        <div class="ccard-logo">🌾</div>
+        <div class="ccard-hinfo">
+          <div class="ccard-en">PT Agro Nusantara Indonesia</div>
+          <div class="ccard-ar">أغرو نوسانتارا الإندونيسية</div>
+        </div>
+        <div class="status-dot-row"><div class="dot g"></div>مكتملة</div>
+      </div>
+      <div class="ccard-body">
+        <p class="ccard-desc">من أكبر مصدّري زيت النخيل والكاكاو، تأسست 1998 وتصدّر لـ 15 دولة.</p>
+        <div class="tag-row">
+          <span class="tag">📍 جاكرتا</span><span class="tag">📅 26 سنة</span>
+          <span class="tag red">زيت النخيل</span><span class="tag red">الكاكاو</span>
+        </div>
+        <div class="ccard-actions">
+          <span class="ccard-btn main">عرض الملف</span>
+          <span class="ccard-btn out">📋 عرض سعر</span>
+          <span class="ccard-btn out">💬 رسالة</span>
+        </div>
+      </div>
+    </a>
+    <a href="#company" class="ccard">
+      <div class="ccard-top" style="background:linear-gradient(120deg,#1a1a2e,#2a3a6e)">
+        <div class="ccard-logo">🫘</div>
+        <div class="ccard-hinfo">
+          <div class="ccard-en">PT Kopi Sumatra Mandiri</div>
+          <div class="ccard-ar">كوبي سومطرة مانديري</div>
+        </div>
+        <div class="status-dot-row"><div class="dot g"></div>مكتملة</div>
+      </div>
+      <div class="ccard-body">
+        <p class="ccard-desc">قهوة سومطرة الأرابيكا المعتمدة عضوياً، 500 طن شهرياً.</p>
+        <div class="tag-row">
+          <span class="tag">📍 ميدان</span><span class="tag">📅 18 سنة</span>
+          <span class="tag red">أرابيكا</span><span class="tag red">روبوستا</span>
+        </div>
+        <div class="ccard-actions">
+          <span class="ccard-btn main">عرض الملف</span>
+          <span class="ccard-btn out">📋 عرض سعر</span>
+          <span class="ccard-btn out">💬 رسالة</span>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="sec-hd"><h2>كيف تعمل المنصة</h2></div>
+  <div class="how-card"><div class="step-num">١</div><div class="step-text"><h3>سجّل حسابك</h3><p>أنشئ ملفك كمستورد مجاناً في دقيقتين</p></div></div>
+  <div class="how-card"><div class="step-num">٢</div><div class="step-text"><h3>تصفّح وفلتر</h3><p>اختر القطاع وفلتر بالمدينة والمنتج</p></div></div>
+  <div class="how-card"><div class="step-num">٣</div><div class="step-text"><h3>راسل الشركات</h3><p>أرسل استفساراً أو طلب عرض سعر مباشرة</p></div></div>
+  <div class="how-card" style="margin-bottom:20px"><div class="step-num">٤</div><div class="step-text"><h3>أتمّ صفقتك</h3><p>استعن بخدماتنا للعقود والشحن والتحقق</p></div></div>
+
+  <div class="sec-hd"><h2>خدماتنا</h2></div>
+  <div class="svc-grid" style="margin-bottom:20px">
+    <div class="svc-card"><div class="svc-num">01</div><div class="svc-ico">🏭</div><div class="svc-name">زيارة المصانع</div><div class="svc-desc">توثيق ميداني بالصور والفيديو</div></div>
+    <div class="svc-card"><div class="svc-num">02</div><div class="svc-ico">💼</div><div class="svc-name">استشارات تجارية</div><div class="svc-desc">خبراء في السوق الإندونيسي</div></div>
+    <div class="svc-card"><div class="svc-num">03</div><div class="svc-ico">📋</div><div class="svc-name">إعداد العقود</div><div class="svc-desc">عربي / إندونيسي / إنجليزي</div></div>
+    <div class="svc-card"><div class="svc-num">04</div><div class="svc-ico">🚢</div><div class="svc-name">متابعة الشحن</div><div class="svc-desc">من المصنع لميناء الوصول</div></div>
+    <div class="svc-card"><div class="svc-num">05</div><div class="svc-ico">🌐</div><div class="svc-name">ترجمة وتفاوض</div><div class="svc-desc">مترجمون تجاريون متخصصون</div></div>
+    <div class="svc-card"><div class="svc-num">06</div><div class="svc-ico">✅</div><div class="svc-name">التحقق من الشركات</div><div class="svc-desc">تحقق قانوني وميداني</div></div>
+  </div>
+  <div style="height:80px"></div>
+</div>
+
+<!-- ══ SECTOR ══ -->
+<div id="pg-sector" class="page">
+  <div class="topbar">
+    <div class="topbar-row">
+      <a href="#home" class="back-link">←</a>
+      <div style="font-size:16px;font-weight:800;color:#fff">المنتجات الزراعية</div>
+      <div style="font-size:12px;color:var(--gray)">189 شركة</div>
+    </div>
+  </div>
+  <div class="search-wrap" style="margin:12px 16px">
+    <input type="text" placeholder="بحث في القطاع...">
+    <button class="search-btn">🔍</button>
+  </div>
+  <div class="filter-bar">
+    <a href="#sector" class="fchip active">الكل</a>
+    <a href="#sector" class="fchip">جاكرتا</a>
+    <a href="#sector" class="fchip">ميدان</a>
+    <a href="#sector" class="fchip">سورابايا</a>
+    <a href="#sector" class="fchip">باندونغ</a>
+    <a href="#sector" class="fchip">✅ مكتملة</a>
+    <a href="#sector" class="fchip">🌿 عضوي</a>
+  </div>
+  <div style="padding:10px 16px;font-size:12px;color:var(--gray)">189 شركة · مرتبة حسب الأحدث</div>
+  <div class="cards-list">
+    <a href="#company" class="ccard">
+      <div class="ccard-top">
+        <div class="ccard-logo">🌾</div>
+        <div class="ccard-hinfo">
+          <div class="ccard-en">PT Agro Nusantara Indonesia</div>
+          <div class="ccard-ar">أغرو نوسانتارا الإندونيسية</div>
+        </div>
+        <div class="status-dot-row"><div class="dot g"></div>مكتملة</div>
+      </div>
+      <div class="ccard-body">
+        <p class="ccard-desc">من أكبر مصدّري زيت النخيل والكاكاو، تأسست 1998 وتصدّر لـ 15 دولة.</p>
+        <div class="tag-row"><span class="tag">📍 جاكرتا</span><span class="tag">📅 26 سنة</span><span class="tag red">زيت النخيل</span></div>
+        <div class="ccard-actions">
+          <span class="ccard-btn main">عرض الملف</span>
+          <span class="ccard-btn out">📋 سعر</span>
+          <span class="ccard-btn out">💬</span>
+        </div>
+      </div>
+    </a>
+    <a href="#company" class="ccard">
+      <div class="ccard-top" style="background:linear-gradient(120deg,#1a1a2e,#2a3a6e)">
+        <div class="ccard-logo">🫘</div>
+        <div class="ccard-hinfo">
+          <div class="ccard-en">PT Kopi Sumatra Mandiri</div>
+          <div class="ccard-ar">كوبي سومطرة مانديري</div>
+        </div>
+        <div class="status-dot-row"><div class="dot g"></div>مكتملة</div>
+      </div>
+      <div class="ccard-body">
+        <p class="ccard-desc">قهوة سومطرة الأرابيكا المعتمدة عضوياً، 500 طن شهرياً.</p>
+        <div class="tag-row"><span class="tag">📍 ميدان</span><span class="tag">📅 18 سنة</span><span class="tag red">أرابيكا</span></div>
+        <div class="ccard-actions">
+          <span class="ccard-btn main">عرض الملف</span>
+          <span class="ccard-btn out">📋 سعر</span>
+          <span class="ccard-btn out">💬</span>
+        </div>
+      </div>
+    </a>
+    <a href="#company" class="ccard">
+      <div class="ccard-top" style="background:linear-gradient(120deg,#2d4a22,#3a6b2a)">
+        <div class="ccard-logo">🥥</div>
+        <div class="ccard-hinfo">
+          <div class="ccard-en">CV Kelapa Segar Nusantara</div>
+          <div class="ccard-ar">كيلابا سيغار نوسانتارا</div>
+        </div>
+        <div class="status-dot-row"><div class="dot y"></div>غير مكتملة</div>
+      </div>
+      <div class="ccard-body">
+        <p class="ccard-desc">منتجات جوز الهند المصنّعة: شراب، دقيق، وزيت بكر.</p>
+        <div class="tag-row"><span class="tag">📍 سولاويسي</span><span class="tag">📅 9 سنوات</span><span class="tag red">زيت جوز الهند</span></div>
+        <div class="ccard-actions">
+          <span class="ccard-btn main">عرض الملف</span>
+          <span class="ccard-btn out">📋 سعر</span>
+          <span class="ccard-btn out">💬</span>
+        </div>
+      </div>
+    </a>
+  </div>
+  <div style="height:80px"></div>
+</div>
+
+<!-- ══ COMPANY ══ -->
+<div id="pg-company" class="page">
+  <div class="profile-hero">
+    <a href="#sector" class="back-link" style="position:absolute;top:52px;right:16px">←</a>
+    <div class="profile-logo-big">🌾</div>
+    <div class="profile-name">أغرو نوسانتارا الإندونيسية</div>
+    <div class="profile-en">PT Agro Nusantara Indonesia · تأسست 1998</div>
+    <div class="profile-chips">
+      <span class="pchip">📍 جاكرتا</span>
+      <span class="pchip">✅ بيانات مكتملة</span>
+      <span class="pchip">🕌 حلال MUI</span>
+      <span class="pchip">⭐ 4.8/5</span>
+    </div>
+    <div class="profile-actions">
+      <a href="#rfq" class="pact-btn main">📋 طلب عرض سعر</a>
+      <a href="#chat" class="pact-btn out">💬 إرسال رسالة</a>
+      <a href="#chat" class="pact-btn out">🤝 طلب تواصل مباشر</a>
+    </div>
+  </div>
+  <div class="profile-tabs">
+    <div class="ptab" style="color:var(--red);border-bottom:2px solid var(--red)">نبذة</div>
+    <div class="ptab">المنتجات</div>
+    <div class="ptab">شهادات</div>
+    <div class="ptab">تواصل</div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid #F2F2F7;padding:16px 0">
+    <div class="stat"><div class="stat-n">26</div><div class="stat-l">سنة خبرة</div></div>
+    <div class="stat"><div class="stat-n">2K+</div><div class="stat-l">طن/شهر</div></div>
+    <div class="stat"><div class="stat-n">15</div><div class="stat-l">دولة</div></div>
+    <div class="stat"><div class="stat-n">400+</div><div class="stat-l">موظف</div></div>
+  </div>
+  <div class="pblock">
+    <div class="pblock-title">نبذة عن الشركة</div>
+    <p style="font-size:13.5px;color:#555;line-height:1.8">تأسست عام 1998 في جاكرتا، من أبرز المصدّرين في قطاع المنتجات الزراعية. تمتلك مزارع مباشرة في سومطرة وجاوا ومنشأة تصنيع بطاقة تتجاوز 2,000 طن شهرياً.</p>
+  </div>
+  <div class="pblock">
+    <div class="pblock-title">المنتجات الرئيسية</div>
+    <div class="prod-grid">
+      <div class="prod-item"><div class="prod-ico">🫙</div><div><div class="prod-name">زيت النخيل المكرر</div><div class="prod-moq">MOQ: 10 طن</div></div></div>
+      <div class="prod-item"><div class="prod-ico">🍫</div><div><div class="prod-name">مسحوق الكاكاو</div><div class="prod-moq">MOQ: 5 طن</div></div></div>
+      <div class="prod-item"><div class="prod-ico">🥥</div><div><div class="prod-name">زيت جوز الهند</div><div class="prod-moq">MOQ: 2 طن</div></div></div>
+      <div class="prod-item"><div class="prod-ico">🌾</div><div><div class="prod-name">الكسافا المجففة</div><div class="prod-moq">MOQ: 20 طن</div></div></div>
+    </div>
+  </div>
+  <div class="pblock">
+    <div class="pblock-title">الشهادات والاعتمادات</div>
+    <div class="cert-item"><div class="cert-ico">🏅</div><div><div class="cert-n">ISO 9001:2015</div><div class="cert-exp">صالح حتى 2026</div></div></div>
+    <div class="cert-item"><div class="cert-ico">🌿</div><div><div class="cert-n">RSPO — نخيل مستدام</div><div class="cert-exp">صالح حتى 2025</div></div></div>
+    <div class="cert-item"><div class="cert-ico">🕌</div><div><div class="cert-n">شهادة حلال — MUI</div><div class="cert-exp">صالح حتى 2026</div></div></div>
+  </div>
+  <div class="pblock">
+    <div class="pblock-title">معلومات التواصل</div>
+    <div class="prow"><div class="prow-ico">📍</div><span>Jl. Gatot Subroto No.18, Jakarta Selatan</span></div>
+    <div class="prow"><div class="prow-ico">📞</div><span dir="ltr">+62 21 5555 1234</span></div>
+    <div class="prow"><div class="prow-ico">📧</div><span>export@agronusantara.co.id</span></div>
+    <div class="prow"><div class="prow-ico">💬</div><span dir="ltr">WhatsApp: +62 812 3456 7890</span></div>
+  </div>
+  <div class="pblock" style="margin-bottom:20px">
+    <div class="pblock-title">أسواق التصدير</div>
+    <div class="tag-row">
+      <span class="tag red">🇸🇦 السعودية</span><span class="tag red">🇦🇪 الإمارات</span>
+      <span class="tag red">🇪🇬 مصر</span><span class="tag red">🇰🇼 الكويت</span>
+      <span class="tag">🇲🇾 ماليزيا</span><span class="tag">🇨🇳 الصين</span>
+    </div>
+  </div>
+  <div style="height:80px"></div>
+</div>
+
+<!-- ══ DASHBOARD ══ -->
+<div id="pg-dash" class="page">
+  <div class="dash-greeting">
+    <div class="dash-name">مرحباً، أحمد 👋</div>
+    <div class="dash-sub">لوحة تحكم المستورد · الكويت</div>
+  </div>
+  <div class="dash-stats">
+    <div class="dstat"><div class="dstat-n">12</div><div class="dstat-l">شركة مفضلة</div><div class="dstat-c">+3 هذا الأسبوع</div></div>
+    <div class="dstat"><div class="dstat-n">7</div><div class="dstat-l">طلبات تواصل</div><div class="dstat-c">5 مردود عليها</div></div>
+    <div class="dstat"><div class="dstat-n">4</div><div class="dstat-l">عروض أسعار</div><div class="dstat-c">1 جديد اليوم</div></div>
+    <div class="dstat"><div class="dstat-n red">3</div><div class="dstat-l">رسائل جديدة</div><div class="dstat-c" style="color:var(--red)">يحتاج متابعة</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px 16px">
+    <a href="#sector" class="btn-primary" style="text-align:center">🔍 تصفح الشركات</a>
+    <a href="#rfq" style="padding:13px;background:var(--dark);border-radius:10px;font-family:var(--f);font-size:13px;font-weight:700;color:#fff;text-decoration:none;text-align:center;display:block">📋 طلب عرض سعر</a>
+  </div>
+  <div class="list-card">
+    <div class="list-header"><div class="list-title">طلبات عروض الأسعار</div><span class="list-more">الكل ←</span></div>
+    <div class="list-item"><div class="li-ico" style="background:rgba(192,57,43,0.1)">🌾</div><div class="li-info"><div class="li-name">أغرو نوسانتارا — زيت النخيل</div><div class="li-sub">50 طن · 15 يناير 2025</div></div><span class="pill g">تم الرد</span></div>
+    <div class="list-item"><div class="li-ico" style="background:rgba(26,26,46,0.1)">🫘</div><div class="li-info"><div class="li-name">كوبي سومطرة — قهوة أرابيكا</div><div class="li-sub">10 طن · 12 يناير 2025</div></div><span class="pill y">انتظار</span></div>
+    <div class="list-item"><div class="li-ico" style="background:rgba(45,74,34,0.1)">🪵</div><div class="li-info"><div class="li-name">جاوا وود — خشب الساج</div><div class="li-sub">200 م³ · 8 يناير 2025</div></div><span class="pill r">جديد</span></div>
+  </div>
+  <div class="list-card" style="margin-top:12px">
+    <div class="list-header"><div class="list-title">الشركات المفضلة</div><a href="#sector" class="list-more">الكل ←</a></div>
+    <a href="#company" class="list-item"><div class="li-ico" style="background:rgba(192,57,43,0.1)">🌾</div><div class="li-info"><div class="li-name">أغرو نوسانتارا الإندونيسية</div><div class="li-sub">زراعي · جاكرتا</div></div><span class="pill g">مكتملة</span></a>
+    <div class="list-item"><div class="li-ico" style="background:rgba(26,58,92,0.1)">🐟</div><div class="li-info"><div class="li-name">سومطرة فيشريز</div><div class="li-sub">بحري · ميدان</div></div><span class="pill g">مكتملة</span></div>
+    <div class="list-item"><div class="li-ico" style="background:rgba(45,74,34,0.1)">🥥</div><div class="li-info"><div class="li-name">كيلابا سيغار نوسانتارا</div><div class="li-sub">زراعي · سولاويسي</div></div><span class="pill y">ناقصة</span></div>
+  </div>
+  <div style="height:80px"></div>
+</div>
+
+<!-- ══ MESSAGES ══ -->
+<div id="pg-messages" class="page">
+  <div class="topbar">
+    <div class="topbar-row">
+      <div style="font-size:18px;font-weight:900;color:#fff">الرسائل</div>
+      <a href="#rfq" style="padding:8px 14px;background:var(--red);border-radius:8px;color:#fff;font-family:var(--f);font-size:12px;font-weight:700;text-decoration:none">+ طلب سعر</a>
+    </div>
+  </div>
+  <div class="search-wrap" style="margin:12px 16px">
+    <input type="text" placeholder="بحث في المحادثات...">
+    <button class="search-btn">🔍</button>
+  </div>
+  <div class="msg-list">
+    <a href="#chat" class="msg-item"><div class="msg-avatar" style="background:linear-gradient(135deg,var(--red2),var(--red))">🌾</div><div class="msg-info"><div class="msg-name">أغرو نوسانتارا</div><div class="msg-preview">سنرسل لكم عرض السعر خلال 24 ساعة...</div></div><div class="msg-meta"><div class="msg-time">10:32</div><div class="msg-badge">3</div></div></a>
+    <a href="#chat" class="msg-item"><div class="msg-avatar" style="background:linear-gradient(135deg,#1a1a2e,#2a3a6e)">🫘</div><div class="msg-info"><div class="msg-name">كوبي سومطرة</div><div class="msg-preview">نعم، لدينا شهادة حلال من MUI معتمدة...</div></div><div class="msg-meta"><div class="msg-time">أمس</div></div></a>
+    <a href="#chat" class="msg-item"><div class="msg-avatar" style="background:linear-gradient(135deg,#2d4a22,#3a6b2a)">🪵</div><div class="msg-info"><div class="msg-name">جاوا وود جروب</div><div class="msg-preview">الحد الأدنى 200 متر مكعب للشحنة الواحدة</div></div><div class="msg-meta"><div class="msg-time">الثلاثاء</div></div></a>
+    <a href="#chat" class="msg-item" style="opacity:0.5"><div class="msg-avatar" style="background:#555">⚙️</div><div class="msg-info"><div class="msg-name">إندوتك للصناعة</div><div class="msg-preview" style="color:#bbb">لم يتم الرد بعد</div></div><div class="msg-meta"><div class="msg-time">3 يناير</div></div></a>
+  </div>
+  <div style="height:80px"></div>
+</div>
+
+<!-- ══ CHAT ══ -->
+<div id="pg-chat" class="page">
+  <div class="chat-topbar">
+    <a href="#messages" class="back-link" style="font-size:20px;padding:0;background:none;border:none;color:#fff">←</a>
+    <div class="chat-av" style="background:linear-gradient(135deg,var(--red2),var(--red))">🌾</div>
+    <div style="flex:1">
+      <div class="chat-cname">أغرو نوسانتارا</div>
+      <div class="chat-online">● متصل الآن</div>
+    </div>
+    <a href="#company" style="padding:7px 12px;background:rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-family:var(--f);font-size:12px;text-decoration:none">الملف</a>
+  </div>
+  <div class="quick-replies">
+    <a href="#rfq" class="qr red">📋 طلب عرض سعر</a>
+    <span class="qr">شروط الدفع؟</span>
+    <span class="qr">زيارة المصنع؟</span>
+    <span class="qr">طلب عينة</span>
+    <span class="qr">مواعيد التسليم؟</span>
+  </div>
+  <div class="chat-area">
+    <div style="text-align:center;font-size:11px;color:var(--gray);background:#E5E5EA;display:inline-block;margin:0 auto;padding:3px 12px;border-radius:10px;align-self:center">اليوم</div>
+    <div class="bubble-in"><div class="bubble-body">السلام عليكم، شكراً لاستفساركم. ما الكمية المطلوبة تقريباً؟</div><div class="bubble-time">10:15 ص</div></div>
+    <div class="bubble-out"><div class="bubble-body">وعليكم السلام، نحتاج حوالي 50 طن شهرياً. هل لديكم شهادة حلال؟</div><div class="bubble-time">10:22 ص ✓✓</div></div>
+    <div class="bubble-in">
+      <div class="bubble-body">
+        بالتأكيد، جميع الشهادات متوفرة. إليكم الكتالوج:
+        <div class="attach-bubble"><div class="att-ico">📄</div><div><div class="att-name">كتالوج-أغرو-2025.pdf</div><div class="att-size">2.4 MB</div></div><div class="att-dl">⬇</div></div>
+      </div>
+      <div class="bubble-time">10:32 ص</div>
+    </div>
+    <div class="bubble-in">
+      <div class="bubble-body" style="display:flex;gap:5px;align-items:center;padding:14px 16px">
+        <span style="width:7px;height:7px;background:#ccc;border-radius:50%;animation:bounce .7s infinite alternate"></span>
+        <span style="width:7px;height:7px;background:#ccc;border-radius:50%;animation:bounce .7s .2s infinite alternate"></span>
+        <span style="width:7px;height:7px;background:#ccc;border-radius:50%;animation:bounce .7s .4s infinite alternate"></span>
+      </div>
+    </div>
+  </div>
+  <div class="chat-input-bar">
+    <input class="chat-input" type="text" placeholder="اكتب رسالتك...">
+    <a href="#chat" class="chat-send">←</a>
+  </div>
+</div>
+
+<!-- ══ LOGIN ══ -->
+<div id="pg-login" class="page">
+  <div class="auth-wrap">
+    <div class="auth-logo">
+      <div class="logo-sq">ص</div>
+      <h1><span style="color:var(--red)">صفقة</span> إندونيسيا</h1>
+      <p>تسجيل الدخول إلى حسابك</p>
+    </div>
+    <div class="auth-card">
+      <div class="social-row">
+        <button class="social-btn">🔵 Google</button>
+        <button class="social-btn">💼 LinkedIn</button>
+      </div>
+      <div class="divider"><span>أو بالبريد الإلكتروني</span></div>
+      <div class="field"><label>البريد الإلكتروني</label><input type="email" placeholder="example@company.com" dir="ltr"></div>
+      <div class="field"><label>كلمة المرور <a href="#login" style="float:left;color:var(--red);text-decoration:none;font-size:11px">نسيت؟</a></label><input type="password" placeholder="••••••••" dir="ltr"></div>
+      <a href="#dash" class="auth-btn">تسجيل الدخول ←</a>
+      <div class="auth-link">ليس لديك حساب؟ <a href="#register">إنشاء حساب مجاني</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ REGISTER ══ -->
+<div id="pg-register" class="page">
+  <div class="auth-wrap">
+    <div class="auth-logo">
+      <div class="logo-sq">ص</div>
+      <h1><span style="color:var(--red)">صفقة</span> إندونيسيا</h1>
+      <p>إنشاء حساب مجاني جديد</p>
+    </div>
+    <div class="auth-card">
+      <div class="type-toggle">
+        <button class="tt-btn active">🛒 مستورد</button>
+        <button class="tt-btn">🏭 مورّد / مصنع</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="field"><label>الاسم الأول</label><input type="text" placeholder="أحمد"></div>
+        <div class="field"><label>اسم العائلة</label><input type="text" placeholder="الرشيدي"></div>
+      </div>
+      <div class="field"><label>البريد الإلكتروني</label><input type="email" placeholder="ahmed@company.com" dir="ltr"></div>
+      <div class="field"><label>رقم الهاتف</label><input type="tel" placeholder="+966 5X XXX XXXX" dir="ltr"></div>
+      <div class="field"><label>الدولة</label>
+        <select><option>🇸🇦 السعودية</option><option>🇦🇪 الإمارات</option><option>🇰🇼 الكويت</option><option>🇶🇦 قطر</option><option>🇪🇬 مصر</option></select>
+      </div>
+      <div class="field"><label>اسم الشركة</label><input type="text" placeholder="شركة الرشيدي للاستيراد"></div>
+      <div class="field"><label>كلمة المرور</label><input type="password" placeholder="8 أحرف على الأقل" dir="ltr"></div>
+      <a href="#dash" class="auth-btn">إنشاء الحساب مجاناً ←</a>
+      <div class="auth-link">لديك حساب؟ <a href="#login">تسجيل الدخول</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ RFQ SHEET ══ -->
+<div id="rfq" class="rfq-overlay">
+  <div class="rfq-sheet">
+    <div class="rfq-handle"></div>
+    <div class="rfq-hd">
+      <div><div class="rfq-title">📋 طلب عرض سعر</div><div style="font-size:11px;color:var(--gray);margin-top:2px">أغرو نوسانتارا الإندونيسية</div></div>
+      <a href="#" class="rfq-close">✕</a>
+    </div>
+    <div class="rfq-body">
+      <div class="rfq-field"><label class="rfq-label">المنتج المطلوب *</label>
+        <select class="rfq-input"><option>زيت النخيل المكرر</option><option>مسحوق الكاكاو</option><option>زيت جوز الهند البكر</option><option>منتج آخر</option></select>
+      </div>
+      <div class="rfq-row">
+        <div class="rfq-field"><label class="rfq-label">الكمية *</label><input class="rfq-input" type="number" placeholder="50"></div>
+        <div class="rfq-field"><label class="rfq-label">الوحدة</label>
+          <select class="rfq-input"><option>طن</option><option>كيلوغرام</option><option>حاوية 20'</option><option>حاوية 40'</option></select>
+        </div>
+      </div>
+      <div class="rfq-field"><label class="rfq-label">تكرار الطلب</label>
+        <div class="freq-opts">
+          <span class="freq-opt">مرة واحدة</span>
+          <span class="freq-opt" style="background:var(--red);color:#fff;border-color:var(--red)">شهرياً</span>
+          <span class="freq-opt">ربع سنوي</span>
+        </div>
+      </div>
+      <div class="rfq-row">
+        <div class="rfq-field"><label class="rfq-label">ميناء التسليم</label>
+          <select class="rfq-input"><option>ميناء جدة</option><option>ميناء دبي</option><option>ميناء الكويت</option></select>
+        </div>
+        <div class="rfq-field"><label class="rfq-label">طريقة الدفع</label>
+          <select class="rfq-input"><option>خطاب اعتماد LC</option><option>T/T تحويل بنكي</option><option>دفع مسبق 30%</option></select>
+        </div>
+      </div>
+      <div class="rfq-field"><label class="rfq-label">ملاحظات</label><textarea class="rfq-input" rows="2" placeholder="أي متطلبات خاصة..."></textarea></div>
+      <div class="rfq-summary">
+        <div class="rfq-sum-title">ملخص الطلب</div>
+        <div class="rfq-sum-row"><span>المنتج:</span><strong>زيت النخيل المكرر</strong></div>
+        <div class="rfq-sum-row"><span>الكمية:</span><strong>50 طن / شهرياً</strong></div>
+        <div class="rfq-sum-row"><span>التسليم:</span><strong>ميناء جدة · LC</strong></div>
+      </div>
+      <a href="#company" class="rfq-submit" style="display:block;text-align:center;text-decoration:none;color:#fff">إرسال طلب عرض السعر ←</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BOTTOM NAV ══ -->
+<nav class="bnav">
+  <a href="#home">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    الرئيسية
+  </a>
+  <a href="#sector">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+    القطاعات
+  </a>
+  <a href="#messages" style="position:relative">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+    <span class="bnav-badge">3</span>
+    رسائل
+  </a>
+  <a href="#dash">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+    لوحتي
+  </a>
+  <a href="#login">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+    حسابي
+  </a>
+</nav>
+
+</body>
+</html>
